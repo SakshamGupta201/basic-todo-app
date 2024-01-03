@@ -31,11 +31,11 @@
           {% for task in tasks %}
             <div class="card m-1">
               <div class="card-body">
-                {{task.title}}
+                {{ task.title }}
                 <span style="position: relative; float: right;">
-                  <a class="btn btn-success"><i class="fa fa-check"></i> Mark as Done</a>
-                  <a class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                  <a class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+                  <a href="{% url 'mark_done' task.pk %}" class="btn btn-success"><i class="fa fa-check"></i> Mark as Done</a>
+                  <a href="{% url 'delete' task.pk %}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                  <a href="{% url 'update' task.pk %}" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
                 </span>
               </div>
             </div>
@@ -44,9 +44,21 @@
         <div class="col-md-5 col-lg-5">
           <h5>Completed Tasks</h5>
           <!-- List of all the tasks that have completed -->
-          <div class="card m-1">
-            <div class="card-body">This is the completed task.</div>
-          </div>
+          {% for task in completed_tasks %}
+            <div class="card m-1">
+              <form action="{% url 'mark_undone' task.pk %}" method="post">
+                {% csrf_token %}
+                <div class="card-body row">
+                  <p class="col-6">{{ task.title }}</p>
+                  
+                  <span class="col-6"><button class="btn btn-danger" style="width: 200px;"><i class="fa fa-times"></i> Mark as UnDone</button></span>
+                </div>
+
+                <div class="col-6">
+                </div>
+              </form>
+            </div>
+          {% endfor %}
         </div>
       </div>
       <div class="row">
@@ -56,7 +68,7 @@
             {% csrf_token %}
             <div class="form-group">
               <span style="display: flex;">
-                <input type="text" name="task"  class="form-control" placeholder="Add a task" required />
+                <input type="text" name="task" class="form-control" placeholder="Add a task" required />
                 <button class="btn btn-primary" style="width: 200px;"><i class="fa fa-plus"></i> Add</button>
               </span>
             </div>
